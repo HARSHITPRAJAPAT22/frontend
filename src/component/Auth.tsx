@@ -47,7 +47,7 @@ export const Auth = ({ type }: { type: "signin" | "signup" }) => {
             <NamedInput
               type="text"
               placeholder="Enter Your Name"
-              value={postInput.name}
+              value={postInput.name ||""}
               onChange={(e) => setPostInput({ ...postInput, name: e.target.value })}
             />
           )}
