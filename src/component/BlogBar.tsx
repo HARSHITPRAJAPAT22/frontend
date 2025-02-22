@@ -45,7 +45,7 @@ export const BlogBar = ({  }: { authorName: string | null }) => {
     <nav className="fixed top-0 left-0 w-full bg-white shadow-md border-b border-gray-200 z-50">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Blog Title */}
-        <Link to="/" className="text-2xl font-bold text-blue-900">
+        <Link to="/blogs" className="text-2xl font-bold text-blue-900">
           BlogSpace
         </Link>
 
@@ -82,14 +82,13 @@ export const BlogBar = ({  }: { authorName: string | null }) => {
               >
                 Publish
               </Link>
-              <button
+              <Link
+                to="/"
                 onClick={() => {
                   localStorage.clear();
                 }}
                 className="block w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm transition-all"
-              >
-                Logout
-              </button>
+              >Logout</Link>
             </div>
           )}
         </div>
