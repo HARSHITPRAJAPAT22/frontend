@@ -29,7 +29,8 @@ export const Blogs = () => {
               authorName={blog.author?.name || "Unknown"}
               title={blog.title}
               content={blog.content}
-              publishDate={blog.publishDate || "N/A"}
+              publishDate={ new Date().toISOString()}
+
             />
           ))
         ) : (

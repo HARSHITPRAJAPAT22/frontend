@@ -22,7 +22,6 @@ export const PublishBar = () => {
         const response = await axios.get(`${BACKEND_URL}/api/v1/blog`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setUserId(response.data.id);
         setAuthorName(response.data.name || "Unknown"); // Fallback if name is missing
       } catch (error) {

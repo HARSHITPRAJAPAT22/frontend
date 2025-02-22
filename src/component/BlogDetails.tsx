@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
 import { Blog } from "../hooks";
-import { DetailedBlogBar } from "./DetailedBlogBar";
+import { BlogBar } from "./BlogBar";
 import { Skelton } from "./Skelton";
-import {jwtDecode} from "jwt-decode";
+
 
 export const BlogDetail = ({ blog }: { blog: Blog }) => {
   if (!blog) {
@@ -11,19 +12,16 @@ export const BlogDetail = ({ blog }: { blog: Blog }) => {
       </div>
     );
   }
-  const token = localStorage.getItem("token");
-let name = ""
-if (token) {
-  const decodedToken: any = jwtDecode(token);  // Decode JWT
-  console.log("Decoded Token:", decodedToken);
-  console.log("Logged-in user:", decodedToken.name); // Assuming 'name' exists
-  name = decodedToken.name;
-}
+  const[name, setName] = useState("Guest");
+  useEffect(()=>{
+    setName(localStorage.getItem('userName') ||"U");
+  }, []);
+ 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col items-center px-4 py-10">
       
       {/* Blog Bar at the Top */}
-      <DetailedBlogBar authorName={name} />
+      <BlogBar authorName={name} />
 
       {/* Blog Card Below the Bar */}
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl border border-gray-200 flex mt-14">
@@ -35,12 +33,12 @@ if (token) {
 
           {/* Publish Date */}
           <span className="block text-gray-400 text-sm mb-4">
-            {new Date(blog.publishDate).toLocaleDateString("en-US", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            })}
-          </span>
+                {new Date(new Date()).toLocaleDateString("en-US", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          })}
+           </span>
 
           {/* Blog Content */}
           <p className="text-gray-600 text-lg leading-relaxed">{blog.content}</p>
@@ -60,7 +58,7 @@ if (token) {
 
           {/* Author Bio */}
           <p className="text-xs text-gray-500 mt-2 italic text-center">
-            Passionate writer and content creator.
+            {blog.author.about}
           </p>
         </div>
 

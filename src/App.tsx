@@ -4,6 +4,8 @@ import { Signin } from './pages/Signin'
 import { Blog } from './pages/Blog'
 import { Blogs } from "./pages/Blogs";
 import { Publish } from './pages/Publish';
+import AboutAuthor from './pages/Author';
+import Home from './pages/home';
 
 function App() {
 
@@ -11,14 +13,16 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-        {/* <Route path="/" element={<h1>Home Page</h1>} /> */}
+        <Route path="/" element={<Home/>} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/blog/:id" element={<Blog />} />
           <Route path="/blogs" element={<Blogs />} />
           <Route path="/publish" element={<Publish />} />
+          <Route path="/about" element={<AboutAuthor/>} />
         </Routes>
       </BrowserRouter>
+      
     </>
   )
 }

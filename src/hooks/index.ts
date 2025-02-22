@@ -7,12 +7,14 @@ export interface Blog{
     "title": string,
     "id": string,
     "author": {
-        "name": string
+        "name": string,
+        "about" : string
     }
 }
 export const useBlog = ({ id }: { id: string }) => {
     const [blog, setBlog] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);    
+    const[about, setAbout] = useState("");
 
     useEffect(() => {
         const fetchBlog = async () => {
@@ -26,6 +28,7 @@ export const useBlog = ({ id }: { id: string }) => {
                 });
                 console.log("Blog fetched successfully:", response.data);
                 setBlog(response.data);
+                setAbout(response.data.user.about);
             } catch (error) {
                 console.error("Error fetching blog:", error);
             } finally {
@@ -36,7 +39,9 @@ export const useBlog = ({ id }: { id: string }) => {
         if (id) fetchBlog();
     }, [id]);
 
-    return { loading, blog };
+    return { loading, blog,
+        about
+     };
 };
 export const useBlogs = ()=>{
     const[loading, setLoading] = useState(true);

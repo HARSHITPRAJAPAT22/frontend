@@ -11,32 +11,43 @@ export const Auth = ({ type }: { type: "signin" | "signup" }) => {
     email: "",
     password: "",
   });
-async function sendRequest(){
-    try{ const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === "signup"?"signup":"signin"}`, postInput)
-    const jwt = `Bearer ${response.data.jwt}`
-    localStorage.setItem("token", jwt);
-    navigate("/blogs")
-                  
-}
+  const [loading, setLoading] = useState(false); // Prevent multiple requests
 
-catch(e){
-  //alert the user here that the request failed
-  alert("error while signin");
-}
-}
+  async function sendRequest() {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
+        postInput
+      );
+
+      const jwt = `Bearer ${response.data.jwt}`;
+      const userName = response.data.user.name;
+      const userId = response.data.user.id;
+      localStorage.setItem("token", jwt);
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("userId", userId);
+      navigate("/blogs");
+    } catch (e) {
+      alert("Error while signing in. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="w-full md:w-3/4 lg:w-2/3 p-6 sm:p-10 flex flex-col items-center bg-white shadow-lg rounded-lg">
-        <h1 className="text-4xl font-bold text-gray-500 mb-2">
+        <h1 className="text-4xl font-bold text-gray-700 mb-4">
           {type === "signup" ? "Sign Up" : "Sign In"}
         </h1>
 
         <div className="w-full max-w-sm space-y-4">
-          {/* Show name input only for Sign Up */}
           {type === "signup" && (
             <NamedInput
               type="text"
               placeholder="Enter Your Name"
+              value={postInput.name}
               onChange={(e) => setPostInput({ ...postInput, name: e.target.value })}
             />
           )}
@@ -44,20 +55,28 @@ catch(e){
           <NamedInput
             type="email"
             placeholder="Enter Your Email"
+            value={postInput.email}
             onChange={(e) => setPostInput({ ...postInput, email: e.target.value })}
           />
 
           <NamedInput
             type="password"
             placeholder="Password"
+            value={postInput.password}
             onChange={(e) => setPostInput({ ...postInput, password: e.target.value })}
           />
 
-          <button onClick={sendRequest} className="w-full py-3 bg-blue-900 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-            {type === "signup" ? "Sign Up" : "Sign In"}
+          <button
+            onClick={sendRequest}
+            disabled={loading}
+            className={`w-full py-3 text-white font-semibold rounded-lg transition ${
+              loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-900 hover:bg-blue-700"
+            }`}
+          >
+            {loading ? "Processing..." : type === "signup" ? "Sign Up" : "Sign In"}
           </button>
 
-          <p className="text-xs text-gray-600 text-center">
+          <p className="text-sm text-gray-600 text-center">
             {type === "signup" ? "Already have an account?" : "Don't have an account?"}{" "}
             <Link to={type === "signup" ? "/signin" : "/signup"} className="text-blue-900 font-semibold">
               {type === "signup" ? "Sign in" : "Sign up"}
@@ -73,14 +92,16 @@ catch(e){
 interface NamedInputType {
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
   type: string;
 }
 
-function NamedInput({ placeholder, onChange, type }: NamedInputType) {
+function NamedInput({ placeholder, onChange, value, type }: NamedInputType) {
   return (
     <div>
       <input
         onChange={onChange}
+        value={value}
         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
         type={type}
         placeholder={placeholder}
